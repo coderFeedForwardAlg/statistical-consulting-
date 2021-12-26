@@ -1,0 +1,432 @@
+---
+title: "intrestingVarsGraphs"
+author: "Max Scott"
+date: "10/3/2021"
+output: pdf_document
+---
+
+TODO 
+writen report 
+  make sure all graphs are related to zip code 
+  do per revew stuff 
+pawer poit 
+  put stuff in pawer poit 
+  use writen report as guid 
+  have some structre 
+
+
+my vars 
+
+poverty [X]
+sexual oriantation [] ( not enuf data)
+income [X]
+zip code [X] 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+d
+
+
+```{r}
+intrestingGroups <- MentalHealth %>% 
+  select(gender,poverty,annual_household_income,race_id,age,health_insurance,employment_status,education_level,sexual_orientation,relationship_status,zipcode, pandemic_after)
+head(intrestingGroups)
+```
+
+```{r}
+intrestingGroups %>% 
+  ggplot() + geom_bar( aes(x = health_insurance, fill=pandemic_after))
+```
+
+
+```{r}
+poverty <- intrestingGroups %>% 
+  filter(poverty == 1)
+poverty
+
+poverty %>% 
+  ggplot(aes( pandemic_after)) + geom_histogram(fill = "blue") + theme_bw() + xlab("After Pandemic")
+```
+annual_household_income 
+pandemic_after
+
+```{r}
+not_poverty <- intrestingGroups %>% 
+  filter(poverty == 0)
+not_poverty
+
+not_poverty %>% 
+  ggplot() + geom_histogram( aes(x = pandemic_after ),fill = "blue")+ theme_bw() + xlab("After Pandemic")
+```
+
+
+```{r}
+
+
+intrestingGroups %>% 
+  ggplot() + geom_histogram( aes(x = pandemic_after), fill = "blue") + facet_wrap(vars(education_level)) + theme_dark()
+```
+
+sexual oriantation 
+Asexual  (1)  
+Bisexual  (2)  
+Homosexual  (3)  
+Heterosexual or straight  (4)  
+Pansexual  (5)  
+Other  (6)
+
+gender (dont know what is waht)
+Male   
+Female  
+Non-binary   
+Other 
+
+88.19 % of all data is in group Heterosexual 
+```{r}
+MentalHealth %>% 
+  ggplot() + geom_bar( aes(x = sexual_orientation, fill = as.factor(gender))) + coord_flip() + theme_bw() + xlab("Sexual Orientation") + scale_x_discrete( labels = c("2" = "b", "4" ="d"  ,"6" ="f"))
+
+#plain vinila 
+MentalHealth %>% 
+  ggplot() + geom_bar( aes(x = sexual_orientation, fill = as.factor(gender))) + theme_bw()
+
+#ingnor this for now / just trying to understand what 4 and 6 are for gender 
+MentalHealth %>% 
+  ggplot() + geom_bar( aes(x = sexual_orientation, fill = as.factor(gender))) + facet_wrap(vars(sexual_orientation))
+
+
+fours <- intrestingGroups %>% 
+  select(sexual_orientation) %>% 
+  filter(sexual_orientation==4) %>% 
+  nrow()
+totol <- intrestingGroups %>% 
+  select(sexual_orientation) %>% 
+  nrow()
+
+
+# mathy stuff 
+totol
+fours
+
+(fours/totol)*100
+(totol - fours) / 5
+
+```
+
+
+p-valu of 0.0143 implies that there is significant difrenc in mental health among difrent sexual oriantations 
+
+# dont say that you can draw a conclushion 
+
+```{r}
+champagne_supernova <- aov(pandemic_after ~ sexual_orientation, data = intrestingGroups)
+
+#summary(one.way)
+```
+
+
+
+
+**************** start on zipcode ****************
+
+
+
+
+
+```{r}
+intrestingGroups %>% 
+  filter(zipcode != 16652 ) %>% 
+  ggplot() + geom_histogram(aes(x = pandemic_after)) + facet_wrap(vars(zipcode))
+
+notHuntington <- intrestingGroups %>% 
+  filter(zipcode != 16652 ) %>% 
+  nrow()
+
+notHuntington
+
+notHuntington / 28
+```
+
+```{r}
+intrestingGroups %>% 
+  filter(zipcode != 16652) %>% 
+  ggplot() + geom_histogram(aes(x = pandemic_after))
+  
+```
+
+```{r}
+intrestingGroups %>% 
+  filter(zipcode == 16652) %>% 
+  ggplot() + geom_histogram(aes(x = pandemic_after))
+```
+
+
+********************   zipcode and income *******************
+
+income among huntingdon  people 
+```{r}
+
+intrestingGroups %>%
+  filter(zipcode == 16611) %>% 
+  ggplot() + geom_bar(aes(x = annual_household_income)) 
+```
+
+incom among all non huntingdon people 
+
+```{r}
+intrestingGroups %>%
+  filter(zipcode != 16611) %>% 
+  ggplot() + geom_bar(aes(x = annual_household_income)) 
+```
+
+```{r}
+intrestingGroups %>% 
+  select(annual_household_income)
+```
+
+
+
+********************   sexual oriantation and zipcode  *******************
+```{r}
+
+```
+************** sexual oriantation and poverty as related to mental health 
+```{r}
+not_poverty <- intrestingGroups %>% 
+  filter(poverty == 1)
+not_poverty
+
+not_poverty %>% 
+  ggplot() + geom_histogram(aes(x = pandemic_after)) + facet_wrap(vars(sexual_orientation))
+
+```
+
+```{r}
+poverty <- intrestingGroups %>% 
+  filter(poverty == 0)
+poverty
+
+```
+
+```{r}
+intrestingGroups %>%
+  
+  ggplot() + geom_bar(aes(x = annual_household_income)) 
+
+intrestingGroups %>%
+  select(annual_household_income)
+
+intrestingGroups %>% 
+  ggplot() + geom_histogram(aes(x = pandemic_after), fill = "blue") + facet_wrap(vars(annual_household_income)) + theme_bw() + xlab("After Pandemic")
+```
+
+over 50,000 seams to increas your odds of hving exilent mental health status  
+
+```{r}
+MentalHealth %>% 
+  select(travel_time)
+
+MentalHealth %>% 
+  filter( travel_time != 6) %>% 
+  ggplot() + geom_bar(aes(x = travel_time))
+```
+
+most peole would only haveto travel 5-15 minuts to get to a profeshinal for help while very few wouldhave to travle more than an huer. 
+
+
+```{r}
+MentalHealth %>%
+  filter(zipcode != 16652) %>% 
+  ggplot() + geom_bar(aes(x = poverty)) + facet_wrap(vars(zipcode))
+```
+
+
+
+
+
+```{r}
+MentalHealth %>% 
+  group_by(zip_region) %>% 
+  summarize( MFV = mfv(annual_household_income)) 
+  
+```
+
+```{r}
+MentalHealth %>%
+  filter(zipcode != 16652) %>% 
+  ggplot() + geom_bar(aes(x = as.factor(annual_household_income)), fill = "blue") + facet_wrap(vars(zipcode)) + theme_bw() + labs(x = "Annual Household Income") + coord_flip() + scale_x_discrete(labels= c("5-10 min", "", "asdf", "", "slfkj", "", "sfd", ""))  
+
+```
+
+
+
+```{r}
+MentalHealth %>%
+  filter(zipcode != 16652) %>% 
+  ggplot() + geom_bar(aes(x = as.factor(annual_household_income)), fill = "blue") + facet_wrap(vars(zipcode)) + theme_bw() + labs(x = "Annual Household Income") + coord_flip() + scale_x_discrete(labels= c("5-10 min", "", "asdf", "", "slfkj", "", "sfd", ""))  
+
+MentalHealth %>% 
+  filter(zipcode == 16652) %>% 
+  ggplot() + geom_bar(aes(x = annual_household_income), fill ="blue") + theme_bw() + labs(x = "Annual Household Income") 
+
+MentalHealth %>%
+  #filter(zipcode != 16652) %>% 
+  ggplot() + geom_bar(aes(x = as.factor(annual_household_income)), fill = "2020ff") + facet_wrap(vars(zip_region)) + theme_bw() + labs(x = "Annual Household Income") + coord_flip() + scale_x_discrete(labels= c("5-10 min", "", "asdf", "", "slfkj", "", "sfd", ""))  
+
+Mental_mod <- MentalHealth %>%
+  # Rename 4 to 4wd, f to Front, r to Rear
+  filter(zip_region != 999) %>% 
+  mutate(zip_region = recode(zip_region, "1" = "Juniata Valley", "2" = "Huntingdon", "3" = "Mount Union", "4" = "Suthern Huntingdon", "5" = "Mifflin Juniata", "999" = "Other"))
+
+Mental_mod %>%
+  #filter(zip_region != 999) %>% 
+  ggplot() + geom_bar(aes(x = as.factor(annual_household_income)), fill = "light blue") + facet_wrap(vars(zip_region)) + theme_bw() + labs(x = "Annual Household Income", y = "Number of Respondents") + coord_flip() + scale_x_discrete(labels= c("No Income", "Under $15,000", "$15,000 - $29,999", "$30,000 - $49,999", "$50,000 - $74,999", "$75,000 - $99,999", "$100,000 -$150,000", "Over $150,000"))  
+```
+
+
+
+
+```{r}
+cases <- MentalHealth %>% 
+  filter(travel_time == 5) %>% 
+  #filter(zipcode == 43026) %>% 
+  select(travel_time, zipcode) 
+
+cases
+
+cases2 <- MentalHealth %>% 
+  filter(travel_time == 1) %>% 
+  #filter(zipcode == 43026) %>% 
+  select(travel_time, zipcode) 
+
+cases2
+9/10
+```
+
+
+
+
+```{r}
+
+MentalHealth %>% 
+  filter(travel_time != 6) %>% 
+  #filter(zipcode != 16652) %>% 
+  ggplot() + geom_bar(aes(x = as.factor(travel_time), fill = as.factor(zipcode)), position = "fill" ) + theme_bw(base_size = 22) + 
+scale_x_discrete(labels= c("5-10 min", "16 - 30 min", " 31 - 45 min", " 46 - 60 min", "more than 1 hour"))  + labs(fill = "Zip Code") + labs( x = "Travel Time" , y = "Number of Respondents" ) 
+
+```
+question 52 ( trabel_time)
+1 = 5-10
+2 = 16 - 30 
+3 = 31 - 45
+4 = 46 - 60 
+5 = >1 h 
+6 = other 
+
+
+question 42_5 ( ranked_finding_transportaiontoni)
+
+1 = extremely eazy 
+2 = moderitly eazy 
+3 = ... 
+
+7 = extreamly dificult 
+
+
+
+
+
+```{r}
+
+MentalHealth %>% 
+  filter(travel_time != 6) %>% 
+  #filter(zipcode != 16652) %>% 
+  ggplot() + geom_bar(aes(x = ranking_finding_transportation, fill = as.factor(zipcode)), position = "fill" ) 
+
+```
+from this graph and the last collor graph it apers that thir is not a strang relation between travle time and dificulty with transportation. 
+
+
+question 52 ( trabel_time)
+1 = 5-10
+2 = 16 - 30 
+3 = 31 - 45
+4 = 46 - 60 
+5 = >1 h 
+6 = other 
+
+
+question 42_5 ( ranked_finding_transportaiontoni)
+
+1 = extremely eazy 
+2 = moderitly eazy 
+3 = ... 
+
+7 = extreamly dificult 
+
+```{r}
+
+MentalHealth %>% 
+  ggplot() + geom_bar(aes(x = ranking_finding_transportation))
+
+table(MentalHealth$ranking_finding_transportation, MentalHealth$travel_time )
+```
+
+
+
+```{r}
+
+newHelth <- MentalHealth %>% 
+  mutate(ranking_finding_transportation = ranking_finding_transportation + 1)
+newHelth <- newHelth %>% 
+  mutate(travel_time = travel_time + 1)
+
+
+table(MentalHealth$ranking_finding_transportation, MentalHealth$travel_time )
+table(newHelth$ranking_finding_transportation, newHelth$travel_time )
+
+
+MentalHealth %>% 
+  count(ranking_finding_transportation , travel_time) %>%  
+  ggplot(mapping = aes(x = ranking_finding_transportation , y = travel_time)) +
+    geom_tile(mapping = aes(fill = n))
+```
+
+
+
+```{r}
+MentalHealth %>% 
+  ggplot() + geom_count( aes(x = as.factor(travel_time), y = ranking_finding_transportation, color = as.factor(zipcode))) + theme_bw(base_size = 22) +scale_x_discrete(labels= c("5-10 min", "16 - 30 min", " 31 - 45 min", " 46 - 60 min", "more than 1 hour", "other"))  + labs(x = "Travel Time", y = "Finding Transportation", color = "Zip Code", size = "Number of Cases")
+
+
+MentalHealth %>% 
+  ggplot() + geom_count( aes(x = travel_time, y = ranking_finding_transportation, color = as.factor(zipcode)))  + facet_wrap(vars(zipcode)) 
+```
+
+
+
+```{r}
+means <- MentalHealth %>% 
+  summarize(mean_finding_good_service_provider = mean(ranking_finding_a_provider, na.rm = TRUE))
+
+
+means <- means %>% 
+  pivot_longer(-0, names_to = "what_chalenge" ,values_to = "the_means") 
+
+means <- means %>% 
+  arrange(desc(the_means))
+means
+```
+
+
+
+
+
+
+
+
+
+
+
