@@ -1,0 +1,245 @@
+---
+title: "question 35 secont try"
+author: "Max Scott"
+date: "11/16/2021"
+output: pdf_document
+---
+Do to a lack of data, observed and expected counts are two low and so fishers test is used insted where apropriate. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+
+```
+
+
+```{r}
+MentalHealth <- read_csv("~/Desktop/csvData/client_data_sept29_partial_rename.csv")
+head(MentalHealth)
+```
+
+rating_treatment_type_selectiont X
+rating_find_first_appointment	X
+rating_find_a_provider	X
+ranking_finding_childcare X
+rating_finding_time	X
+are the top 5 greatest dificultys and will be anilized here 
+
+```{r}
+withOut5999 <- MentalHealth %>% 
+  filter(zip_region != 5 & zip_region != 999)
+```
+
+
+
+
+
+
+```{r}
+table(withOut5999$zip_region,withOut5999$ranking_finding_a_provider)
+```
+
+
+
+
+
+
+H0: difficulty level and Zip Code/ Zip Region are  independent 
+Ha: difficulty level  and Zip Code/ Zip Region are dependent 
+
+```{r}
+struglData <- crime_data <- matrix(c(1,18,0,3,
+                                     2,18,2,3,
+                                     0,9 ,1,4,
+                                     1,4 ,1,1,
+                                     2,5 ,3,0,
+                                     1,12,2,0,
+                                     0,3 ,2,2), 
+nrow = 4)
+
+struglData
+
+
+
+
+
+```
+
+expected counts 
+```{r}
+test_results <- chisq.test(struglData)
+test_results$expected
+
+```
+
+espected is les tham 5 
+do fishers exect 
+
+```{r}
+test_results <- fisher.test(struglData, simulate.p.value =  TRUE)
+test_results
+```
+
+
+
+
+```{r}
+table(withOut5999$zip_region,withOut5999$rating_find_first_appointment)
+```
+
+
+```{r}
+struglData1 <- matrix(c(1,6 ,1,1,
+                                     2,17,2,0,
+                                     0,3 ,1,1,
+                                     0,4 ,0,0,
+                                     0,5 ,1,0,
+                                     2,9 ,2,0,
+                                     0,2 ,0,1), 
+nrow = 4)
+
+struglData1
+
+
+```
+expected counts 
+```{r}
+test_results1 <- chisq.test(struglData1)
+test_results1$expected
+
+```
+less thn 5 so fishers 
+
+```{r}
+test_results <- fisher.test(struglData1, simulate.p.value =  TRUE)
+
+test_results
+```
+
+
+
+
+```{r}
+table(withOut5999$zip_region,withOut5999$ranking_finding_childcare)
+```
+
+```{r}
+struglData2 <- matrix(c(3,11,2,8,
+                                      1,7 ,0,0,
+                                      0,6 ,0,2,
+                                      1,32,6,2,
+                                      1,6 ,2,0,
+                                      0,4 ,0,0,
+                                      1,3 ,1,1), 
+nrow = 4)
+
+struglData2
+
+
+```
+
+expected counts 
+```{r}
+test_results2 <- chisq.test(struglData2)
+test_results2$expected
+
+```
+
+less then 5 so use fishers 
+```{r}
+test_results <- fisher.test(struglData2, simulate.p.value =  TRUE)
+
+test_results
+```
+
+
+```{r}
+table(withOut5999$zip_region,withOut5999$rating_finding_time)
+```
+
+
+```{r}
+struglData3 <- matrix(c(
+                                      1,13,1,1,
+                                      1,12,1,1,
+                                      1,5 ,1,0,
+                                      0,5 ,1,0,
+                                      1,10,2,0,
+                                      1,2 ,0,0,
+                                      0, 0 ,1,1), 
+nrow = 4)
+
+struglData3
+
+
+```
+
+expected counts 
+```{r}
+test_results3 <- chisq.test(struglData3)
+test_results3$expected
+
+```
+less the n5 so fishers 
+
+```{r}
+test_results <- fisher.test(struglData3, simulate.p.value =  TRUE)
+
+test_results
+```
+
+
+
+rating_treatment_type_selectiont
+
+
+
+```{r}
+table(withOut5999$zip_region,withOut5999$rating_treatment_type_selection)
+```
+
+
+
+
+
+```{r}
+struglData4 <- matrix(c(
+                                      1,6 ,0,1,
+                                      0,10,2,0,
+                                      0,7 ,2,0,
+                                      0,9 ,0,0,
+                                      2,8 ,0,1,
+                                      2,6 ,2,1,
+                                      0,1 ,1,0 ), 
+nrow = 4)
+
+struglData4
+
+
+```
+
+```{r}
+test_results4 <- chisq.test(struglData4)
+test_results4$expected
+```
+
+less them 5 so fishers 
+```{r}
+test_results <- fisher.test(struglData4, simulate.p.value =  TRUE)
+
+test_results
+```
+
+
+random junk 
+```{r}
+prop.test(x = c(490, 400), n = c(500, 500),
+              alternative = "two.sided")
+
+```
+
+
